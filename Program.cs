@@ -1,29 +1,10 @@
-using TaskManDotNet.Core;
+using TaskManDotNet.Web;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+public class Program
 {
-    app.MapOpenApi();
+    public static int Main(string[] args)
+    {
+        Server.Start(args);
+        return 0;
+    }
 }
-
-var tasks = new[]
-{
-    new TaskItem(1, "first", false),
-    new TaskItem(2, "second", false),
-    new TaskItem(3, "third", false)
-};
-
-app.MapGet("/api/tasks", () =>
-{
-    return Results.Ok(tasks);
-});
-
-app.Run();
