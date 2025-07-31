@@ -21,8 +21,19 @@ public static class Server
     builder.Services.AddOpenApi();
     builder.Services.AddDbContext<TaskItemDb>(opt => opt.UseInMemoryDatabase("TaskItemList"));
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+    builder.Services.AddCors(options =>
+    {
+      options.AddDefaultPolicy(
+          policy =>
+          {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+          });
+    });
 
     var app = builder.Build();
+    app.UseCors();
 
     if (app.Environment.IsDevelopment())
     {
