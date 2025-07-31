@@ -1,5 +1,8 @@
 namespace TaskManDotNet.Web;
 
+using Microsoft.EntityFrameworkCore;
+using TaskManDotNet.Db;
+
 public static class Server
 {
   public static void Start(string[] args)
@@ -14,7 +17,11 @@ public static class Server
   private static WebApplication CreateWebApp(string[] args)
   {
     var builder = WebApplication.CreateBuilder(args);
+
     builder.Services.AddOpenApi();
+    builder.Services.AddDbContext<TaskItemDb>(opt => opt.UseInMemoryDatabase("TaskItemList"));
+    builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
     var app = builder.Build();
 
     if (app.Environment.IsDevelopment())
