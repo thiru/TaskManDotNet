@@ -1,23 +1,16 @@
-import logo from './logo.svg';
-import './App.css';
+import Header from './Header.js';
+import TaskItemList from './TaskItemList.js';
+
+const sampleItems = [
+  {id: 1, description: 'first', isDone: false},
+  {id: 2, description: 'second', isDone: true}
+];
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header />
+      <TaskItemList items={sampleItems} />
     </div>
   );
 }
