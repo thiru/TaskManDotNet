@@ -1,19 +1,63 @@
 namespace TaskManDotNet.Web;
 
+using Microsoft.EntityFrameworkCore;
 using TaskManDotNet.Core;
+using TaskManDotNet.Db;
 
 public static class TaskItemApi
 {
-  // Test data - to be replaced with real DB
-  static TaskItem[] tasks = new[]
+  public static async Task<IResult> GetAll(TaskItemDb db)
   {
-    new TaskItem(1, "first", false),
-    new TaskItem(2, "second", false),
-    new TaskItem(3, "third", false)
-  };
+    return TypedResults.Ok(await db.TaskItems.ToListAsync());
+  }
 
-  public static TaskItem[] GetAll()
+  public static async Task<IResult> GetById(int id, TaskItemDb db)
   {
-    return tasks;
+    return await db.TaskItems.FindAsync(id)
+      is TaskItem taskItem
+        ? TypedResults.Ok(taskItem)
+        : TypedResults.NotFound();
+  }
+
+  public static async Task<IResult> Create(TaskItem taskItem, TaskItemDb db)
+  {
+    db.TaskItems.Add(taskItem);
+    await db.SaveChangesAsync();
+
+    Console.WriteLine("Created task with id {0} and description: {1}", taskItem.Id, taskItem.Description);
+
+    return TypedResults.Created($"/tasks/{taskItem.Id}", taskItem);
+  }
+
+  public static async Task<IResult> Update(int id, TaskItem updatedTaskItem, TaskItemDb db)
+  {
+    var taskItemInDb = await db.TaskItems.FindAsync(id);
+
+    if (taskItemInDb is null)
+      return TypedResults.NotFound();
+
+    taskItemInDb.Description = updatedTaskItem.Description;
+    taskItemInDb.IsDone = updatedTaskItem.IsDone;
+
+    await db.SaveChangesAsync();
+
+    Console.WriteLine("Updated task with id {0}", taskItemInDb.Id);
+
+    return TypedResults.NoContent();
+  }
+
+  public static async Task<IResult> Delete(int id, TaskItemDb db)
+  {
+    if (await db.TaskItems.FindAsync(id) is TaskItem taskItem)
+    {
+      db.TaskItems.Remove(taskItem);
+      await db.SaveChangesAsync();
+
+      Console.WriteLine("Deleted task with id {0} and description: {1}", taskItem.Id, taskItem.Description);
+
+      return TypedResults.NoContent();
+    }
+
+    return TypedResults.NotFound();
   }
 }
