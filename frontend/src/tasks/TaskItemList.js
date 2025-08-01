@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import ErrorMessage from '../ErrorMessage';
 import TaskItem from "./TaskItem";
 
 // TODO: don't hard-code API domain here
@@ -30,6 +31,8 @@ export default function TaskItemList() {
 
   const handleCreate = async (description) => {
     try {
+      setError(null);
+
       const response = await fetch(rootApiUri, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -37,20 +40,23 @@ export default function TaskItemList() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete task");
+        const valResult = await response.json();
+        throw new Error(valResult.message);
       }
       else {
         const newTaskItem = await response.json();
         setTaskItems(currTaskItems => [...currTaskItems, newTaskItem]);
       }
     } catch (error) {
-      console.error("Create task failed:", error);
-      alert('Failed to create a task');
+      console.error('Failed to create task:', error);
+      setError(error.message);
     }
   };
 
   const handleEdit = async (updatedTaskItem) => {
     try {
+      setError(null);
+
       const response = await fetch(`${rootApiUri}/${updatedTaskItem.id}`, {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},
@@ -58,7 +64,8 @@ export default function TaskItemList() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to edit task");
+        const valResult = await response.json();
+        throw new Error(valResult.message);
       }
       else {
         setTaskItems(currTaskItems => currTaskItems.map(x => {
@@ -74,12 +81,14 @@ export default function TaskItemList() {
       }
     } catch (error) {
       console.error("Edit task failed:", error);
-      alert('Failed to edit task');
+      setError(error.message);
     }
   };
 
   const handleDelete = async (id) => {
     try {
+      setError(null);
+
       const response = await fetch(`${rootApiUri}/${id}`, {
         method: "DELETE"
       });
@@ -92,14 +101,21 @@ export default function TaskItemList() {
       }
     } catch (error) {
       console.error("Delete task failed:", error);
-      alert('Failed to delete task');
+      setError(error.message);
     }
   };
 
   return (
     <section className="block container">
+      <ErrorMessage message={error} />
       <button className="button mb-3"
-              onClick={() => handleCreate(window.prompt('Task Description:'))}>
+              onClick={() => {
+                setError(null);
+                const promptRes = window.prompt('Task Description:');
+                if (promptRes !== null) {
+                  handleCreate(promptRes);
+                }
+              }}>
         Add Task
       </button>
       {
@@ -109,19 +125,14 @@ export default function TaskItemList() {
             <span>Loading your tasks...</span>
           </div>
         ) : (
-            error ? (
-              <div className='notification is-warning is-light'>
-                {error}
-              </div>
-            ) : (
-                <ul>
-                  {taskItems.map(x => (
-                    <li key={x.id}>
-                      <TaskItem taskItem={x} onEdit={handleEdit} onDelete={handleDelete} />
-                    </li>
-                  ))}
-                </ul>
-              ))
+            <ul>
+              {taskItems.map(x => (
+                <li key={x.id}>
+                  <TaskItem taskItem={x} onEdit={handleEdit} onDelete={handleDelete} />
+                </li>
+              ))}
+            </ul>
+          )
       }
     </section>
   );
