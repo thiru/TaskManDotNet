@@ -10,7 +10,9 @@ export default function TaskItem({taskItem, onEdit, onDelete}) {
       <button className="button is-white is-small ml-1 mb-2 is-invisible hover-show"
               onClick={() => {
                 const newDescription = window.prompt('New Description:', taskItem.description);
-                onEdit({...taskItem, description: newDescription});
+                if (newDescription !== null) {
+                  onEdit({...taskItem, description: newDescription});
+                }
               }}
               title="Edit description">
         <span className="icon">
