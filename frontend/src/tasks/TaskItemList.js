@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
-import ErrorMessage from '../ErrorMessage';
-import TaskItem from "./TaskItem";
+import TaskItemListView from './TaskItemListView.js';
 
 // TODO: don't hard-code API domain here
 const rootApiUri = 'http://localhost:8000/api/tasks';
 
 export default function TaskItemList() {
-  const [taskItems, setTaskItems] = useState(null);
+  const [taskItems, setTaskItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -29,31 +28,7 @@ export default function TaskItemList() {
     fetchData();
   }, []);
 
-  const handleCreate = async (description) => {
-    try {
-      setError(null);
-
-      const response = await fetch(rootApiUri, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({description: description, isDone: false})
-      });
-
-      if (!response.ok) {
-        const valResult = await response.json();
-        throw new Error(valResult.message);
-      }
-      else {
-        const newTaskItem = await response.json();
-        setTaskItems(currTaskItems => [...currTaskItems, newTaskItem]);
-      }
-    } catch (error) {
-      console.error('Failed to create task:', error);
-      setError(error.message);
-    }
-  };
-
-  const handleEdit = async (updatedTaskItem) => {
+  const handleTaskItemEdit = async (updatedTaskItem) => {
     try {
       setError(null);
 
@@ -85,7 +60,7 @@ export default function TaskItemList() {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleTaskItemDelete = async (id) => {
     try {
       setError(null);
 
@@ -105,35 +80,39 @@ export default function TaskItemList() {
     }
   };
 
-  return (
-    <section className="block container">
-      <ErrorMessage message={error} />
-      <button className="button mb-3"
-              onClick={() => {
-                setError(null);
-                const promptRes = window.prompt('Task Description:');
-                if (promptRes !== null) {
-                  handleCreate(promptRes);
-                }
-              }}>
-        Add Task
-      </button>
-      {
-        loading ? (
-          <div>
-            <i className='fa-solid fa-spinner fa-spin mr-2' />
-            <span>Loading your tasks...</span>
-          </div>
-        ) : (
-            <ul>
-              {taskItems.map(x => (
-                <li key={x.id}>
-                  <TaskItem taskItem={x} onEdit={handleEdit} onDelete={handleDelete} />
-                </li>
-              ))}
-            </ul>
-          )
+  const handleAddBtnOnClick = async () => {
+    setError(null);
+    const description = window.prompt('Task Description:');
+    if (description !== null) {
+      try {
+        setError(null);
+
+        const response = await fetch(rootApiUri, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({description: description, isDone: false})
+        });
+
+        if (!response.ok) {
+          const valResult = await response.json();
+          throw new Error(valResult.message);
+        }
+        else {
+          const newTaskItem = await response.json();
+          setTaskItems(currTaskItems => [...currTaskItems, newTaskItem]);
+        }
+      } catch (error) {
+        console.error('Failed to create task:', error);
+        setError(error.message);
       }
-    </section>
-  );
+    }
+  }
+
+  return <TaskItemListView
+            taskItems={taskItems}
+            error={error}
+            loading={loading}
+            handleAddBtnOnClick={handleAddBtnOnClick}
+            handleTaskItemEdit={handleTaskItemEdit}
+            handleTaskItemDelete={handleTaskItemDelete}/>
 }
