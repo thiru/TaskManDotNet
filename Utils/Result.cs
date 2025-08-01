@@ -1,5 +1,10 @@
 namespace TaskManDotNet.Utils;
 
+/// <summary>
+/// Encapsulates the result of an operation or function.
+/// The `Level` indicates success or failure. A negative value represents an error code while
+/// non-negative indicates success or information codes.
+/// </summary>
 public record Result(int Level, string Message)
 {
   public static Result Success(string message)

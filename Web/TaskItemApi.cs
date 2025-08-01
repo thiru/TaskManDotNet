@@ -82,6 +82,12 @@ public static class TaskItemApi
     });
   }
 
+  /// <summary>
+  /// Utility to ensure all API calls handle and return exceptions as Result types.
+  /// </summary>
+  /// <remarks>
+  /// Perhaps this is better handled by middleware.
+  /// </remarks>
   private static async Task<IResult> WrapException(Func<Task<IResult>> func)
   {
     try

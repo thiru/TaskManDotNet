@@ -1,3 +1,4 @@
+/* Facilities ability to only show elements when hovering over them */
 .is-invisible {
   visibility: hidden;
 }

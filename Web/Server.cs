@@ -20,6 +20,8 @@ public static class Server
 
     builder.Services.AddDbContext<TaskItemDb>(opt => opt.UseInMemoryDatabase("TaskItemList"));
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+    // TODO restrict cors setup for prod
     builder.Services.AddCors(options =>
     {
       options.AddDefaultPolicy(
