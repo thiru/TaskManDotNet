@@ -1,16 +1,6 @@
-/* data-loading elements are hidden by default (https://htmx.org/extensions/loading-states/) */
-[data-loading] {
-  display: none;
-}
-
 .is-invisible {
   visibility: hidden;
 }
 .has-hover-show:hover .hover-show {
   visibility: visible !important;
-}
-
-.htmx-swapping * {
-    opacity: 0;
-      transition: opacity 1s ease-out;
 }

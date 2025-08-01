@@ -1,4 +1,2 @@
 bin/
-frontend/build/
-frontend/node_modules/
 obj/

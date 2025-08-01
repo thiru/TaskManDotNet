@@ -18,7 +18,6 @@ public static class Server
   {
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Services.AddOpenApi();
     builder.Services.AddDbContext<TaskItemDb>(opt => opt.UseInMemoryDatabase("TaskItemList"));
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
     builder.Services.AddCors(options =>
@@ -34,11 +33,6 @@ public static class Server
 
     var app = builder.Build();
     app.UseCors();
-
-    if (app.Environment.IsDevelopment())
-    {
-      app.MapOpenApi();
-    }
 
     return app;
   }
