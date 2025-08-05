@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="/deps/font-awesome/v6.4.2/css/all.min.css" rel="stylesheet">
+  <link href="/deps/bulma/v1.0.4/css/bulma.min.css" rel="stylesheet">
+  <link href="/main.css?v=0.1" rel="stylesheet">
+  <script src="/deps/htmx/v2.0.6/htmx.min.js"></script>
+  <title>TaskMan</title>
+</head>
+<body>
+  <section class="block hero is-link">
+    <div class="hero-body">
+      <p class="title">TaskMan</p>
+      <p class="subtitle is-size-6">A simple task manager</p>
+    </div>
+  </section>
+  <section id="root" class="block container">
+    <div hx-get="/tasks" hx-trigger="load">
+      <p class="htmx-indicator">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <span> Loading your tasks...</span>
+      </p>
+    </div>
+  </section>
+  <script src="/main.js?v=0.1"></script>
+</body>
+</html>

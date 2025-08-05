@@ -16,25 +16,17 @@ public static class Server
 
   private static WebApplication CreateWebApp(string[] args)
   {
-    var builder = WebApplication.CreateBuilder(args);
+    var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+    {
+      WebRootPath = "frontend"
+    });
 
     builder.Services.AddDbContext<TaskItemDb>(opt => opt.UseInMemoryDatabase("TaskItemList"));
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-    // TODO restrict cors setup for prod
-    builder.Services.AddCors(options =>
-    {
-      options.AddDefaultPolicy(
-          policy =>
-          {
-            policy.AllowAnyOrigin()
-                  .AllowAnyMethod()
-                  .AllowAnyHeader();
-          });
-    });
-
     var app = builder.Build();
-    app.UseCors();
+    app.UseDefaultFiles();
+    app.UseStaticFiles();
 
     return app;
   }

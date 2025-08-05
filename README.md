@@ -9,18 +9,13 @@ A simple website to manage your tasks.
 
 ## Develop
 
-To start the app you will need to start the backend and frontend separately:
+To simply start the app run:
 
 ```shell
 dotnet run
 ```
 
-```shell
-cd frontend
-npm start
-```
-
-A web server will be started at [http://localhost:3000](http://localhost:3000).
+A web server will be started at [http://localhost:8000](http://localhost:8000).
 
 ## Tech Stack
 
@@ -33,7 +28,7 @@ A web server will be started at [http://localhost:3000](http://localhost:3000).
 ### Frontend
 
 - Language: Javascript
-- Framework: React
+- Framework: [htmx](https://htmx.org/)
 - UI: [Bulma](https://bulma.io/documentation/)
 
 ## Considerations
@@ -55,5 +50,3 @@ The following describes some of the major limitations, assumptions and trade-off
 - For prod, include middleware to handle exception and show friendly message to user
 - Replace console logs with a proper logging system
 - No unit tests, etc. have been written
-- Some of the npm libraries were reported to have vulnerabilities
-  - These need to be tested/upgraded

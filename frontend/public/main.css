@@ -1,7 +1,0 @@
-/* Facilities ability to only show elements when hovering over them */
-.is-invisible {
-  visibility: hidden;
-}
-.has-hover-show:hover .hover-show {
-  visibility: visible !important;
-}

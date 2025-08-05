@@ -1,0 +1,17 @@
+/* data-loading elements are hidden by default (https://htmx.org/extensions/loading-states/) */
+[data-loading] {
+  display: none;
+}
+
+.htmx-swapping * {
+    opacity: 0;
+      transition: opacity 1s ease-out;
+}
+
+/* Facilities ability to only show elements when hovering over them */
+.is-invisible {
+  visibility: hidden;
+}
+.has-hover-show:hover .hover-show {
+  visibility: visible !important;
+}
